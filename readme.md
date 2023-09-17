@@ -1,9 +1,9 @@
 Setup:
 
 1. If you don't have npm or Typescript installed yet, follow the instructions described in section 3 of https://docs.mendix.com/apidocs-mxsdk/mxsdk/setting-up-your-development-environment/#setting. You can ignore the steps before and after.
-2. Either download this project or click on 'Use this template' to immediately create your own repository based on this template.
-3. Create a folder named 'config' in this project's root folder.
-4. In it, put a file named 'config.json' that contains the following JSON snippet:
+2. Download this project
+3. Create folders named 'config' and 'output' in this project's root folder.
+4. In the config folder, put a file named 'config.json' that contains the following JSON snippet:
 
    {
    "projectid": "{YourProjectIdHere}",
@@ -21,7 +21,7 @@ Setup:
 
 Instructions:
 
-This basic project allows you to open a working copy of a Mendix project and more or less do whatever you want with it: analyze, build, automate...
+This project gives a simple example of how to check the userlibs in your Mendix project for duplicates using the Mendix SDK.
 You can use the following npm-commands:
 
 - npm run build: compile (actually: transpile) your TypeScript to JavaScript
