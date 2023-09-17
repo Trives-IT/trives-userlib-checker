@@ -33,3 +33,4 @@ You can use the following npm-commands:
 Useful resources:
 
 - All SDK documentation and tutorials by Mendix: https://docs.mendix.com/apidocs-mxsdk/mxsdk/
+- Our starter project for working with the Mendix sdk upon which this example was built: https://github.com/Trives-IT/trives-mendixsdk-starter
