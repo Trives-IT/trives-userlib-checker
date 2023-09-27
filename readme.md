@@ -28,6 +28,8 @@ You can use the following npm-commands:
 - npm run script: execute the JavaScript file index.js that you created using 'build'
 - npm run buildandrun: transpile your TS to JS and immediately execute
 
+The file config/libnames.json is a starting point for defining library names, but is not by any means a definitive list. It does cover modules like SAML, Encryption and some other often used Marketplace modules.
+
 ---
 
 Useful resources:

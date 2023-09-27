@@ -17,24 +17,25 @@ async function main() {
   const mxWorkingCopy = await mxApp.createTemporaryWorkingCopy(config.branch);
   const mxModel = await mxWorkingCopy.openModel();
 
+  // Step 1: Load the list of library names from the config file
   const libraryNames: string[] = JSON.parse(JSON.stringify(libnames)); // Load the list of library names from the config file
 
-  // Step 1: Get all the files in the project that are .jar files and are in the userlib folder
-  const fileNames = (await mxModel.getFiles()).filter((file) => file.endsWith(".jar")).filter((file) => file.includes("userlib"));
+  // Step 2: Get all the files in the project that are .jar files and are in the userlib folder
+  const files = (await mxModel.getFiles()).filter((file) => file.endsWith(".jar")).filter((file) => file.includes("userlib"));
 
-  // Step 2: Loop through the list of library names and count how many times each library name is found in the list of files. Output to a map.
+  // Step 3: Loop through the list of library names and count how many times each library name is found in the list of files. Output to a map.
   const libraryCountMap = new Map<string, number>(); // Prepare a map to store the result counts
-  for (const libName of libraryNames) {
+  for (const word of libraryNames) {
     let count = 0;
-    for (const fileName of fileNames) {
-      if (fileName.includes(libName)) {
+    for (const fileName of files) {
+      if (fileName.includes(word)) {
         count++;
       }
     }
-    libraryCountMap.set(libName, count);
+    libraryCountMap.set(word, count);
   }
 
-  // Step 3: Filter the libraryCountMap to only include libraries that are found more than once
+  // Step 4: Filter the libraryCountMap to only include libraries that are found more than once
   const filteredResults = new Map<string, number>();
   libraryCountMap.forEach((count, word) => {
     if (count > 1) {
@@ -42,14 +43,14 @@ async function main() {
     }
   });
 
-  // Step 4: Get the files that match the filteredResults
+  // Step 5: Get the files that match the filteredResults
   const outputFiles: string[][] = [];
   for (const filteredResult of filteredResults) {
     const file = (await mxModel.getFiles()).filter((file) => file.endsWith(".jar")).filter((file) => file.includes(filteredResult[0]));
     outputFiles.push(file);
   }
 
-  // Step 5: Write the output to a JSON file
+  // Step 6: Write the output to a JSON file
   fs.rmSync("output/output.json", { recursive: true, force: true }); // Delete the output file if it has already been created previously
   fs.writeFileSync("output/output.json", JSON.stringify(outputFiles)); // Write the output to a JSON file
 }
