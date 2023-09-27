@@ -20,18 +20,18 @@ async function main() {
   const libraryNames: string[] = JSON.parse(JSON.stringify(libnames)); // Load the list of library names from the config file
 
   // Step 1: Get all the files in the project that are .jar files and are in the userlib folder
-  const files = (await mxModel.getFiles()).filter((file) => file.endsWith(".jar")).filter((file) => file.includes("userlib"));
+  const fileNames = (await mxModel.getFiles()).filter((file) => file.endsWith(".jar")).filter((file) => file.includes("userlib"));
 
   // Step 2: Loop through the list of library names and count how many times each library name is found in the list of files. Output to a map.
   const libraryCountMap = new Map<string, number>(); // Prepare a map to store the result counts
-  for (const word of libraryNames) {
+  for (const libName of libraryNames) {
     let count = 0;
-    for (const fileName of files) {
-      if (fileName.includes(word)) {
+    for (const fileName of fileNames) {
+      if (fileName.includes(libName)) {
         count++;
       }
     }
-    libraryCountMap.set(word, count);
+    libraryCountMap.set(libName, count);
   }
 
   // Step 3: Filter the libraryCountMap to only include libraries that are found more than once
@@ -50,8 +50,8 @@ async function main() {
   }
 
   // Step 5: Write the output to a JSON file
-  fs.rmSync("output/output.json", { recursive: true, force: true });
-  fs.writeFileSync("output/output.json", JSON.stringify(outputFiles));
+  fs.rmSync("output/output.json", { recursive: true, force: true }); // Delete the output file if it has already been created previously
+  fs.writeFileSync("output/output.json", JSON.stringify(outputFiles)); // Write the output to a JSON file
 }
 
 async function createNewApp(name: string, templateId?: string, repositoryType: RepositoryType = "git"): Promise<App> {
