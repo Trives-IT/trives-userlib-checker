@@ -12,7 +12,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "mendixmodelsdk": "^4.78.0",
+    "mendixmodelsdk": "^4.79.0",
     "mendixplatformsdk": "^5.1.2"
   }
 }
