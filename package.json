@@ -2,16 +2,17 @@
   "name": "mendix-sdk-files",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "userlibchecker.js",
   "scripts": {
     "build": "tsc ",
-    "script": "node ./build/index.js",
-    "buildandrun": "tsc && node ./build/index.js"
+    "script": "node ./build/userlibchecker.js",
+    "buildandrun": "tsc && node ./build/userlibchecker.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "extract-zip": "^2.0.1",
     "mendixmodelsdk": "^4.79.0",
     "mendixplatformsdk": "^5.1.2"
   }
