@@ -4,6 +4,8 @@ This tool analyzes the userlib folder of your product to see whether it contains
 
 The current version supports Mendix projects up until 10.3.0.
 
+---
+
 Setup:
 
 1. If you don't have npm or Typescript installed yet, follow the instructions described in section 3 of https://docs.mendix.com/apidocs-mxsdk/mxsdk/setting-up-your-development-environment/#setting. You can ignore the steps before and after.
