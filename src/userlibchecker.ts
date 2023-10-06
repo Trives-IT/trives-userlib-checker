@@ -1,11 +1,7 @@
-import { App, MendixPlatformClient, OnlineWorkingCopy, RepositoryType, setPlatformConfig } from "mendixplatformsdk";
+import { App, MendixPlatformClient, RepositoryType, setPlatformConfig } from "mendixplatformsdk";
 import * as fs from "fs";
-import { IModel } from "mendixmodelsdk";
-import * as path from "path";
 
 const config = require("../config/config.json");
-const libnames = require("../config/libnames.json");
-
 let mxClient: MendixPlatformClient;
 
 main().catch(console.error);
@@ -21,32 +17,30 @@ async function main() {
   // Step 1: Get all the files in the project that are .jar files and are in the userlib folder
   const files = (await mxModel.getFiles()).filter((file) => file.endsWith(".jar")).filter((file) => file.includes("userlib"));
 
-  // Step 2: Create a list of libraries with their versions
+  // Step 2: Create an empty list of library collections
   let libraryList: Library[] = [];
 
-  // Step 3: Loop through the list of files and get the library name and version for each file
+  // Step 3: Loop through the list of files and get the library name and version for each file. If both are found, add it to the library list
   for (const file of files) {
-    const fileName = file.split("/")[1];
-    let libName: string = "";
-    let version: string = "";
-    let libraryVersion: LibraryVersion = { libraryVersion: "", fullFileName: "" };
-
     try {
-      const filenameParts = fileName.split(".jar")[0].split("-");
+      const fileName = file.split("/")[1]; // Get the filename after the userlib folder
+      const filenameParts = fileName.split(".jar")[0].split("-"); // Remove the .jar extension and split the filename on the - character
       // prettier-ignore
-      const versionRegex = new RegExp("^[0-9]+(\.[0-9]+)+"); // Prettier-ignore is needed here since it otherwise messes up the regex
-      version = filenameParts.find((snippet) => versionRegex.test(snippet))!;
-      libName = fileName.substring(0, fileName.indexOf(version) - 1);
-      libraryVersion = { libraryVersion: version, fullFileName: fileName };
-      const library = getLibrary(libraryList, libName);
-      library.libraryVersions.push(libraryVersion);
+      // Prettier-ignore is needed here since it otherwise messes up the regex if you have it installed...
+      const versionRegex = new RegExp("^[0-9]+(\.[0-9]+)+"); //The regex covers all versions that are in the format x.x, x.x.x etc.
+      const version = filenameParts.find((snippet) => versionRegex.test(snippet))!; // Find the first part of the filename that matches the regex. This should be the version
+      const libName = fileName.substring(0, fileName.indexOf(version) - 1); // Get the root library name by removing the version from the filename
+      const libraryVersion = { libraryVersion: version, fullFileName: fileName }; // Create a library version object
+      const library = getLibrary(libraryList, libName); // Get the library object from the library list. The function will create a new library if it doesn't exist yet in the list
+      library.libraryVersions.push(libraryVersion); // Add the library version to the library object
     } catch {
-      console.log("Failed to get library name and version for file: " + file);
+      console.warn("Failed to get library name and version for file: " + file + ". It does not adhere to the usual naming convention."); // If the file does not adhere to the naming convention, log it
     }
   }
 
-  fs.writeFileSync("output/outputnew.json", JSON.stringify(libraryList.sort((a, b) => a.libraryName.localeCompare(b.libraryName))));
-  fs.rmSync("_temp", { recursive: true, force: true });
+  fs.writeFileSync("output/output.json", JSON.stringify(libraryList.sort((a, b) => a.libraryName.localeCompare(b.libraryName)).filter((library) => library.libraryVersions.length > 1)));
+  // Write the library list (with more than 1 version & sorted on alphabet by library name) to a json file
+  console.log("Done! Java library list succesfully written to output/output.json");
 }
 
 async function createNewApp(name: string, templateId?: string, repositoryType: RepositoryType = "git"): Promise<App> {
