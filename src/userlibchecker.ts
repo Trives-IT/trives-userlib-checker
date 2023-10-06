@@ -23,18 +23,19 @@ async function main() {
   // Step 3: Loop through the list of files and get the library name and version for each file. If both are found, add it to the library list
   for (const file of files) {
     try {
-      const fileName = file.split("/")[1]; // Get the filename after the userlib folder
-      const filenameParts = fileName.split(".jar")[0].split("-"); // Remove the .jar extension and split the filename on the - character
+      const fileNameProper = file.split("/")[1]; // Get the filename after the userlib folder
       // prettier-ignore
-      // Prettier-ignore is needed here since it otherwise messes up the regex if you have it installed...
-      const versionRegex = new RegExp("^[0-9]+(\.[0-9]+)+"); //The regex covers all versions that are in the format x.x, x.x.x etc.
-      const version = filenameParts.find((snippet) => versionRegex.test(snippet))!; // Find the first part of the filename that matches the regex. This should be the version
-      const libName = fileName.substring(0, fileName.indexOf(version) - 1); // Get the root library name by removing the version from the filename
-      const libraryVersion = { libraryVersion: version, fullFileName: fileName }; // Create a library version object
-      const library = getLibrary(libraryList, libName); // Get the library object from the library list. The function will create a new library if it doesn't exist yet in the list
+      const versionRegex = new RegExp("^[0-9]+(\.[0-9]+)+"); // The regex covers all versions that are in the format x.x, x.x.x etc.
+      const version = fileNameProper
+        .split(".jar")[0] // Remove the .jar extension
+        .split("-") // Split the filename on the - character
+        .find((snippet) => versionRegex.test(snippet))!; // Find the part that matches the regex for the version
+      const baseLibraryName = fileNameProper.substring(0, fileNameProper.indexOf(version) - 1); // Get the base library name without the version
+      const libraryVersion = { libraryVersion: version, fullFileName: fileNameProper }; // Create a library version
+      const library = getLibrary(libraryList, baseLibraryName); // Get the library object from the library list or add new one if it doesn't exist
       library.libraryVersions.push(libraryVersion); // Add the library version to the library object
     } catch {
-      console.warn("Failed to get library name and version for file: " + file + ". It does not adhere to the usual naming convention."); // If the file does not adhere to the naming convention, log it
+      console.warn("Failed to get library name and version for file: " + file + ". It does not adhere to the usual naming convention.");
     }
   }
 
@@ -66,10 +67,5 @@ function getLibrary(libraryList: Library[], libraryName: string): Library {
 
 interface Library {
   libraryName: string;
-  libraryVersions: LibraryVersion[];
-}
-
-interface LibraryVersion {
-  libraryVersion: string;
-  fullFileName: string;
+  libraryVersions: { libraryVersion: string; fullFileName: string }[];
 }
