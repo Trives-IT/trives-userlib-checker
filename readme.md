@@ -1,4 +1,5 @@
 Trives Userlib Checker:
+
 This tool analyzes the userlib folder of your product to see whether it contains multiple versions of the same Java user library based on their file names. If multiple versions are found in your project, these will be written to a file named output.json in the output folder.
 
 Setup:
