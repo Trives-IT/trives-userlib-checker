@@ -1,1 +1,5 @@
-
+{
+   "projectid": "{YourProjectIdHere}",
+   "mendixtoken": "{YourMendixTokenHere}",
+   "branch": "main"
+}
