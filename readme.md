@@ -10,12 +10,19 @@ Setup:
 
 1. If you don't have npm or Typescript installed yet, follow the instructions described in section 3 of https://docs.mendix.com/apidocs-mxsdk/mxsdk/setting-up-your-development-environment/#setting. You can ignore the steps before and after.
 2. Download this project
-3. In config/config.json:
+3. Add a folder called 'config' and add a file named 'config.json' to it with the following contents:
+   {
+   "projectid": "{YourProjectIdHere}",
+   "mendixtoken": "{YourMendixTokenHere}",
+   "branch": "main"
+   }
+4. Add a folder called 'output'
+5. In config/config.json:
    - Replace {YourProjectIdHere} with the ID of the project you want to use. You can find it in Sprintr under General > Settings.
    - Replace {YourMendixTokenHere} with one you have generated (or create at https://user-settings.mendix.com/link/developersettings)
    - Set the branch that you want to use. The main line for GIT-projects is 'main', for SVN-projects this is 'trunk'.
-4. (Optional) Replace the branch name if you don't want to use the main branch of your project
-5. From your terminal within the project directory, run the command 'npm i'. This will install all the necessary node modules.
+6. (Optional) Replace the branch name if you don't want to use the main branch of your project
+7. From your terminal within the project directory, run the command 'npm i'. This will install all the necessary node modules.
 
 ---
 
