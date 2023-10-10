@@ -31,13 +31,16 @@ async function main() {
       const fileNameProper = file.split("/")[1];
       // prettier-ignore
       const version = fileNameProper 
-        .split(".jar")[0] .split("-") 
+        .split(".jar")[0] 
+        .split("-") 
         .find((snippet) => new RegExp("^[0-9]+(\.[0-9]+)+").test(snippet))!;
       const baseLibraryName = fileNameProper.substring(0, fileNameProper.indexOf(version) - 1);
       const libraryVersion = { libraryVersion: version, fullFileName: fileNameProper };
-      const library = libraryList.find((library) => library.libraryName === baseLibraryName) || 
-      {libraryName: baseLibraryName, libraryVersions: []};
-      if (!libraryList.find((library) => library.libraryName === baseLibraryName)) libraryList.push(library);
+      let library = libraryList.find((library) => library.libraryName === baseLibraryName);
+      if(!library) {
+        library = {libraryName: baseLibraryName, libraryVersions: []}
+        libraryList.push(library);  
+      }
       library.libraryVersions.push(libraryVersion);
     } catch {
       console.warn("Failed to get library name and version for file: " + file);
@@ -49,8 +52,8 @@ async function main() {
     "output/output.json",
     JSON.stringify(
       libraryList
-        .sort((a, b) => a.libraryName.localeCompare(b.libraryName))
         .filter((library) => library.libraryVersions.length > 1)
+        .sort((a, b) => a.libraryName.localeCompare(b.libraryName))
     )
   );
 
